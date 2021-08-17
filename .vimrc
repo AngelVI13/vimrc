@@ -26,6 +26,9 @@ syntax enable
 " Disable word-wrapping by default
 set nowrap
 
+" Enable incremental search
+set incsearch
+
 " Set directory where vim will keep tmp files
 set directory^=$HOME/.vim/tmp//
 
