@@ -15,7 +15,7 @@ set expandtab
 
 " Enable command-line suggestions
 set wildmenu
-set wildmode=longest,list,full
+" set wildmode=longest,list,full
 
 " Set default background color to work with text highlighting
 set background=dark
@@ -45,6 +45,23 @@ au CursorHold * checktime
 " Make vim use full truecolor support
 set termguicolors
 colorscheme torte
+
+" Make netrw default display to `long`
+let g:netrw_liststyle=0
+" Sort files by size
+let g:netrw_sort_by="size"
+" Ignore files in .gitignore
+let g:netrw_list_hide=netrw_gitignore#Hide()
+
+" Make find search down in subfolders
+set path+=**
+
+" Turn on omni completion (programming completion)
+filetype plugin on
+set omnifunc=syntaxcomplete#Complete
+
+" Display all matching files when we tab complete
+" set wildmenu
 
 " Smooth scrolling
 " noremap <expr> <C-u> repeat("\<C-y>", 20)
