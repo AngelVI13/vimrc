@@ -46,7 +46,7 @@ au CursorHold * checktime
 set termguicolors
 colorscheme torte
 
-" Make netrw default display to `long`
+" Make netrw default display to `tree`
 let g:netrw_liststyle=0
 " Sort files by size
 let g:netrw_sort_by="size"
@@ -55,6 +55,8 @@ let g:netrw_list_hide=netrw_gitignore#Hide()
 
 " Make find search down in subfolders
 set path+=**
+" Make it ignore certain filetypes & dirs
+set wildignore+=**/*.pyc
 
 " Turn on omni completion (programming completion)
 filetype plugin on
