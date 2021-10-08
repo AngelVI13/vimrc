@@ -4,8 +4,11 @@ set nu rnu
 " Disable bell sound
 set belloff=all
 
-" Indent with spaces instead of tabs
+" Indent with spaces instead of tabs (filetype specific indents)
 filetype plugin indent on
+" Turn off filetype plugin loading (seems to slow down vim autocompletion cause it searches through include path (very slowly))
+filetype plugin off
+
 " show existing tab with 4 spaces width
 set tabstop=4
 " when indenting with '>', use 4 spaces width
@@ -58,16 +61,8 @@ set path+=**
 " Make it ignore certain filetypes & dirs
 set wildignore+=**/*.pyc
 
-" Turn on omni completion (programming completion)
-filetype plugin on
-set omnifunc=syntaxcomplete#Complete
-
 " Display all matching files when we tab complete
 " set wildmenu
-
-" Smooth scrolling
-" noremap <expr> <C-u> repeat("\<C-y>", 20)
-" noremap <expr> <C-d> repeat("\<C-e>", 20)
 
 " Show tabline indices
 set tabline=%!MyTabLine()  " custom tab pages line
