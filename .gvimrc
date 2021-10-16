@@ -79,11 +79,25 @@ set directory^=$HOME/.vim/tmp//
 set splitbelow
 set splitright
 
+" Enable delete with backspace when in insert mode
+set backspace=indent,eol,start
+
+" Add special keys for switching tabs (that work the same in normal and terminal mode)
+nnoremap <C-j> :tabprevious<CR>
+nnoremap <C-k> :tabnext<CR>
+tnoremap <C-j> <C-W>:tabprevious<CR>
+tnoremap <C-k> <C-W>:tabnext<CR>
+" inoremap <C-j> <C-W>:tabprevious<CR>
+" inoremap <C-k> <C-W>:tabnext<CR>
+
 " Make vim reload file if it was changed on disk while the file is still open
 " in vim (i.e. when running black while still editting the file
 
 set autoread                                                                                                       
 au CursorHold * checktime
+
+"Activate lisp support on lisp filetypes
+autocmd BufNewFile,BufRead *.lisp set lisp
 
 " Make vim use full truecolor support
 set termguicolors
@@ -102,8 +116,8 @@ let g:terminal_ansi_colors=[
     \'#808080',
     \'#606060',
     \'#d82828',
-    \'#28b828',
-    \'#d8d828',
+    \'#168c16',
+    \'#8c8c16',
     \'#2828b8',
     \'#900090',
     \'#009090',
