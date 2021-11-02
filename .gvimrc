@@ -65,6 +65,9 @@ syntax enable
 
 " Disable word-wrapping by default
 set nowrap
+" Set smart case insensitive search
+set ignorecase
+set smartcase
 
 " Enable incremental search
 set incsearch
@@ -87,8 +90,12 @@ nnoremap <C-j> :tabprevious<CR>
 nnoremap <C-k> :tabnext<CR>
 tnoremap <C-j> <C-W>:tabprevious<CR>
 tnoremap <C-k> <C-W>:tabnext<CR>
-" inoremap <C-j> <C-W>:tabprevious<CR>
-" inoremap <C-k> <C-W>:tabnext<CR>
+" Go to normal mode with C-t
+tnoremap <C-t> <C-W>N
+" Quit terminal with C-q
+tnoremap <C-q> <C-W>:q!<CR>
+" Paste with C-v in terminal
+tnoremap <C-v> <C-W>"+
 
 " Make vim reload file if it was changed on disk while the file is still open
 " in vim (i.e. when running black while still editting the file
@@ -129,7 +136,7 @@ let g:netrw_liststyle=1
 " Sort files by size
 let g:netrw_sort_by="size"
 " Ignore files in .gitignore
-" let g:netrw_list_hide=netrw_gitignore#Hide()
+let g:netrw_list_hide= netrw_gitignore#Hide()
 
 " Make find search down in subfolders
 set path+=**
