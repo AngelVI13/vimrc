@@ -4,6 +4,13 @@ set nu rnu
 " Disable bell sound
 set belloff=all
 
+" Change leader key
+let mapleader=","
+map <leader>t :tab term<CR>
+
+" Change key which starts a <C-W> command in a terminal window
+set termwinkey=<C-P>
+
 " Set git-bash as default shell
 set shell=\"C:\Program\ Files\Git\bin\sh.exe\"
 " Settings to make git-bash commands be executed from gvim on windows
@@ -40,6 +47,8 @@ set statusline+=%-14.(%l,%c%V%)\ %<%P        " offset
 " Remove scrollbar
 set guioptions-=r  "remove right-hand scroll bar
 set guioptions-=L  "remove left-hand scroll bar
+set guioptions-=m  "remove menu bar
+set guioptions-=T  "remove tool bar
 
 " Indent with spaces instead of tabs (filetype specific indents)
 filetype plugin indent on
@@ -72,6 +81,9 @@ set smartcase
 " Enable incremental search
 set incsearch
 
+" Enable search highlighting
+set hlsearch
+
 " Add characters to list of number formats
 set nrformats+=alpha
 
@@ -85,17 +97,22 @@ set splitright
 " Enable delete with backspace when in insert mode
 set backspace=indent,eol,start
 
+" Remove all default terminal mappings (so that the default bash keybindings can be used)
+tmapclear
+
 " Add special keys for switching tabs (that work the same in normal and terminal mode)
-nnoremap <C-j> :tabprevious<CR>
-nnoremap <C-k> :tabnext<CR>
-tnoremap <C-j> <C-W>:tabprevious<CR>
-tnoremap <C-k> <C-W>:tabnext<CR>
+nnoremap <C-h> :tabprevious<CR>
+nnoremap <C-l> :tabnext<CR>
+tnoremap <C-h> <C-P>:tabprevious<CR>
+tnoremap <C-l> <C-P>:tabnext<CR>
 " Go to normal mode with C-t
-tnoremap <C-t> <C-W>N
+tnoremap <C-t> <C-P>N
 " Quit terminal with C-q
-tnoremap <C-q> <C-W>:q!<CR>
+tnoremap <C-q> <C-P>:q!<CR>
 " Paste with C-v in terminal
-tnoremap <C-v> <C-W>"+
+tnoremap <C-v> <C-P>"+
+" Enter command mode
+tnoremap <C-[> <C-P>:
 
 " Make vim reload file if it was changed on disk while the file is still open
 " in vim (i.e. when running black while still editting the file
