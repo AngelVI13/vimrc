@@ -9,7 +9,7 @@ let mapleader=","
 map <leader>t :tab term<CR>
 
 " Change key which starts a <C-W> command in a terminal window
-set termwinkey=<C-M>
+set termwinkey=<C-Y>
 
 " Make vim use full truecolor support
 set termguicolors
@@ -84,20 +84,21 @@ set backspace=indent,eol,start
 
 " Remove all default terminal mappings (so that the default bash keybindings can be used)
 tmapclear
+unmap <C-L>
 
 " Add special keys for switching tabs (that work the same in normal and terminal mode)
 nnoremap <C-h> :tabprevious<CR>
 nnoremap <C-l> :tabnext<CR>
-tnoremap <C-h> <C-M>:tabprevious<CR>
-tnoremap <C-l> <C-M>:tabnext<CR>
+tnoremap <C-h> <C-Y>:tabprevious<CR>
+tnoremap <C-l> <C-Y>:tabnext<CR>
 " Go to normal mode with C-t
-tnoremap <C-t> <C-M>N
+tnoremap <C-t> <C-Y>N
 " Quit terminal with C-q
-tnoremap <C-/> <C-M>:q!<CR>
+tnoremap <C-/> <C-Y>:q!<CR>
 " Paste with C-v in terminal
-tnoremap <C-v> <C-M>"+
+tnoremap <C-v> <C-Y>"+
 " Enter command mode
-tnoremap <C-[> <C-M>:
+tnoremap <C-[> <C-Y>:
 
 " Make netrw default display to `tree`
 let g:netrw_liststyle=1
