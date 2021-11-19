@@ -84,7 +84,8 @@ set backspace=indent,eol,start
 
 " Remove all default terminal mappings (so that the default bash keybindings can be used)
 tmapclear
-unmap <C-L>
+" C-L is typically mapped to redraw, it could be that netrw has it mapped to something else as well
+" unmap <C-L>
 
 " Add special keys for switching tabs (that work the same in normal and terminal mode)
 nnoremap <C-h> :tabprevious<CR>
@@ -115,4 +116,6 @@ set wildignore+=**/*.pyc
 " Command that silences the enter something to continue
 command! -nargs=+ Silent execute 'silent <args>' | execute 'redraw!'
 " Git Bash command
-command -nargs=+ GitBashArgs Silent !"git-bash" \-\c <args>  
+" command -nargs=+ GitBashArgs Silent !"git-bash" \-\c <args>  
+command -nargs=+ GitBashArgs call system('git-bash -c <args> &')
+command -nargs=0 Ipy GitBashArgs ipython
