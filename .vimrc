@@ -4,6 +4,43 @@ set nu rnu
 " Disable bell sound
 set belloff=all
 
+" Change leader key
+let mapleader=","
+map <leader>t :tab term<CR>
+
+" Change key which starts a <C-W> command in a terminal window
+set termwinkey=<C-M>
+
+" Make vim use full truecolor support
+set termguicolors
+colorscheme peachpuff
+
+" Custom VIM terminal color scheme that works with peachpuff colorscheme
+let g:terminal_ansi_colors=[
+    \'#101010', 
+    \'#a82c2c',
+    \'#257525',
+    \'#945019',
+    \'#252575',
+    \'#750075',
+    \'#005555',
+    \'#808080',
+    \'#606060',
+    \'#d82828',
+    \'#168c16',
+    \'#8c8c16',
+    \'#2828b8',
+    \'#900090',
+    \'#009090',
+    \'#EEEEEE'
+    \]
+
+" Replace grep with rg
+set grepprg=rg\ -n\ 
+
+" Makes gvim work nice with Windows system clipboard
+set clipboard=unnamed
+
 " Indent with spaces instead of tabs (filetype specific indents)
 filetype plugin indent on
 " Turn off filetype plugin loading (seems to slow down vim autocompletion cause it searches through include path (very slowly))
@@ -18,19 +55,22 @@ set expandtab
 
 " Enable command-line suggestions
 set wildmenu
-" set wildmode=longest,list,full
-
-" Set default background color to work with text highlighting
-set background=dark
+set wildmode=longest:full,full
 
 " Enable syntax highlighting
 syntax enable
 
 " Disable word-wrapping by default
 set nowrap
+" Set smart case insensitive search
+set ignorecase
+set smartcase
 
 " Enable incremental search
 set incsearch
+
+" Enable search highlighting
+set hlsearch
 
 " Set directory where vim will keep tmp files
 set directory^=$HOME/.vim/tmp//
@@ -39,99 +79,39 @@ set directory^=$HOME/.vim/tmp//
 set splitbelow
 set splitright
 
-" Make vim reload file if it was changed on disk while the file is still open
-" in vim (i.e. when running black while still editting the file
+" Enable delete with backspace when in insert mode
+set backspace=indent,eol,start
 
-set autoread                                                                                                       
-au CursorHold * checktime
+" Remove all default terminal mappings (so that the default bash keybindings can be used)
+tmapclear
 
-" Make vim use full truecolor support
-set termguicolors
-colorscheme torte
+" Add special keys for switching tabs (that work the same in normal and terminal mode)
+nnoremap <C-h> :tabprevious<CR>
+nnoremap <C-l> :tabnext<CR>
+tnoremap <C-h> <C-M>:tabprevious<CR>
+tnoremap <C-l> <C-M>:tabnext<CR>
+" Go to normal mode with C-t
+tnoremap <C-t> <C-M>N
+" Quit terminal with C-q
+tnoremap <C-/> <C-M>:q!<CR>
+" Paste with C-v in terminal
+tnoremap <C-v> <C-M>"+
+" Enter command mode
+tnoremap <C-[> <C-M>:
 
 " Make netrw default display to `tree`
-let g:netrw_liststyle=0
+let g:netrw_liststyle=1
 " Sort files by size
 let g:netrw_sort_by="size"
 " Ignore files in .gitignore
-let g:netrw_list_hide=netrw_gitignore#Hide()
+let g:netrw_list_hide= netrw_gitignore#Hide()
 
 " Make find search down in subfolders
 set path+=**
 " Make it ignore certain filetypes & dirs
 set wildignore+=**/*.pyc
 
-" Display all matching files when we tab complete
-" set wildmenu
-
-" Show tabline indices
-set tabline=%!MyTabLine()  " custom tab pages line
-function MyTabLine()
-        let s = '' " complete tabline goes here
-        " loop through each tab page
-        for t in range(tabpagenr('$'))
-                " set highlight
-                if t + 1 == tabpagenr()
-                        let s .= '%#TabLineSel#'
-                else
-                        let s .= '%#TabLine#'
-                endif
-                " set the tab page number (for mouse clicks)
-                let s .= '%' . (t + 1) . 'T'
-                let s .= ' '
-                " set page number string
-                let s .= t + 1 . ': '
-                " get buffer names and statuses
-                let n = ''      "temp string for buffer names while we loop and check buftype
-                let m = 0       " &modified counter
-                let bc = len(tabpagebuflist(t + 1))     "counter to avoid last ' '
-                " loop through each buffer in a tab
-                for b in tabpagebuflist(t + 1)
-                        " buffer types: quickfix gets a [Q], help gets [H]{base fname}
-                        " others get 1dir/2dir/3dir/fname shortened to 1/2/3/fname
-                        if getbufvar( b, "&buftype" ) == 'help'
-                                let n .= '[H]' . fnamemodify( bufname(b), ':t:s/.txt$//' )
-                        elseif getbufvar( b, "&buftype" ) == 'quickfix'
-                                let n .= '[Q]'
-                        else
-                                let n .= pathshorten(bufname(b))
-                        endif
-                        " check and ++ tab's &modified count
-                        if getbufvar( b, "&modified" )
-                                let m += 1
-                        endif
-                        " no final ' ' added...formatting looks better done later
-                        if bc > 1
-                                let n .= ' '
-                        endif
-                        let bc -= 1
-                endfor
-                " add modified label [n+] where n pages in tab are modified
-                if m > 0
-                        let s .= '[' . m . '+]'
-                endif
-                " select the highlighting for the buffer names
-                " my default highlighting only underlines the active tab
-                " buffer names.
-                if t + 1 == tabpagenr()
-                        let s .= '%#TabLineSel#'
-                else
-                        let s .= '%#TabLine#'
-                endif
-                " add buffer names
-                if n == ''
-                        let s.= '[New]'
-                else
-                        let s .= n
-                endif
-                " switch to no underlining and add final space to buffer list
-                let s .= ' '
-        endfor
-        " after the last tab fill with TabLineFill and reset tab page nr
-        let s .= '%#TabLineFill#%T'
-        " right-align the label to close the current tab page
-        " if tabpagenr('$') > 1
-        "         let s .= '%=%#TabLineFill#%999Xclose'
-        " endif
-        return s
-endfunction
+" Command that silences the enter something to continue
+command! -nargs=+ Silent execute 'silent <args>' | execute 'redraw!'
+" Git Bash command
+command -nargs=+ GitBashArgs Silent !"git-bash" \-\c <args>  
