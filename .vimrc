@@ -113,6 +113,9 @@ set path+=**
 " Make it ignore certain filetypes & dirs
 set wildignore+=**/*.pyc
 
+"Activate lisp support on lisp filetypes
+autocmd BufNewFile,BufRead *.lisp set lisp
+
 " Command that silences the enter something to continue
 command! -nargs=+ Silent execute 'silent <args>' | execute 'redraw!'
 " Git Bash command
