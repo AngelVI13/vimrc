@@ -7,6 +7,9 @@ set belloff=all
 " Change leader key
 let mapleader=","
 map <leader>t :tab term<CR>
+map <leader>d :tabe %:p<CR>
+map <leader>c :let @/=""<CR>
+map <leader>e :tabe $MYVIMRC<CR>
 
 " Change key which starts a <C-W> command in a terminal window
 set termwinkey=<C-Y>
@@ -120,5 +123,7 @@ autocmd BufNewFile,BufRead *.lisp set lisp
 command! -nargs=+ Silent execute 'silent <args>' | execute 'redraw!'
 " Git Bash command
 " command -nargs=+ GitBashArgs Silent !"git-bash" \-\c <args>  
+command -nargs=0 GitBash call system('git-bash &')
 command -nargs=+ GitBashArgs call system('git-bash -c <args> &')
 command -nargs=0 Ipy GitBashArgs ipython
+command -nargs=0 MakeTags GitBashArgs ./make_tags.sh
