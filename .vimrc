@@ -10,6 +10,7 @@ map <leader>t :tab term<CR>
 map <leader>d :tabe %:p<CR>
 map <leader>c :let @/=""<CR>
 map <leader>e :tabe $MYVIMRC<CR>
+inoremap jj <Esc>
 
 " Change key which starts a <C-W> command in a terminal window
 set termwinkey=<C-Y>
@@ -109,7 +110,7 @@ let g:netrw_liststyle=1
 " Sort files by size
 let g:netrw_sort_by="size"
 " Ignore files in .gitignore
-let g:netrw_list_hide= netrw_gitignore#Hide()
+"let g:netrw_list_hide= netrw_gitignore#Hide()
 
 " Make find search down in subfolders
 set path+=**
