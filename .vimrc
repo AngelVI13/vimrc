@@ -21,23 +21,23 @@ colorscheme peachpuff
 
 " Custom VIM terminal color scheme that works with peachpuff colorscheme
 let g:terminal_ansi_colors=[
-    \'#101010', 
-    \'#a82c2c',
-    \'#257525',
-    \'#945019',
-    \'#252575',
-    \'#750075',
-    \'#005555',
-    \'#808080',
-    \'#606060',
-    \'#d82828',
-    \'#168c16',
-    \'#8c8c16',
-    \'#2828b8',
-    \'#900090',
-    \'#009090',
-    \'#EEEEEE'
-    \]
+\'#101010', 
+\'#a82c2c',
+\'#257525',
+\'#945019',
+\'#252575',
+\'#750075',
+\'#005555',
+\'#808080',
+\'#606060',
+\'#d82828',
+\'#168c16',
+\'#8c8c16',
+\'#2828b8',
+\'#900090',
+\'#009090',
+\'#EEEEEE'
+\]
 
 " Replace grep with rg
 set grepprg=rg\ -n\ 
@@ -128,3 +128,12 @@ command -nargs=0 GitBash call system('git-bash &')
 command -nargs=+ GitBashArgs call system('git-bash -c <args> &')
 command -nargs=0 Ipy GitBashArgs ipython
 command -nargs=0 MakeTags GitBashArgs ./make_tags.sh
+" Special commands
+" command -nargs=0 Black call system('py -3.7 -m black --line-length=120 ' . expand('%')) | execute 'e'
+command -nargs=0 Black call system('py -3.7 -m black --line-length=120 ' . expand('%')) | execute 'e'
+command -nargs=0 Isort call system('py -3.7 -m isort ' . expand('%')) | execute 'e'
+command -nargs=0 Flake8 cgete system('py -3.7 -m flake8 ' . expand('%') . ' --ignore=E501,E266,W503')
+command -nargs=0 Mypy cadde system('py -3.7 -m mypy --follow-imports=silent ' . expand('%'))
+command -nargs=0 PythonCmds execute 'Black' | execute 'Isort' | execute 'Flake8' | execute 'Mypy'
+
+autocmd BufWritePost *.py PythonCmds 
