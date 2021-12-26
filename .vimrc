@@ -117,8 +117,10 @@ set path+=**
 " Make it ignore certain filetypes & dirs
 set wildignore+=**/*.pyc
 
-"Activate lisp support on lisp filetypes
-autocmd BufNewFile,BufRead *.lisp set lisp
+"Activate lisp & forth support on lisp filetypes
+"NOTE: the forth stuff in the autocmd might not be needed since it might be covered in the filetype cmd
+autocmd BufNewFile,BufRead *.lisp,*.forth,*.fs set lisp
+let filetype_fs = "forth"
 
 " Command that silences the enter something to continue
 command! -nargs=+ Silent execute 'silent <args>' | execute 'redraw!'
