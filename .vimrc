@@ -10,6 +10,7 @@ map <leader>t :tab term<CR>
 map <leader>d :tabe %:p<CR>
 map <leader>c :let @/=""<CR>
 map <leader>e :tabe $MYVIMRC<CR>
+map <leader>o :copen 3<CR>
 inoremap jj <Esc>
 
 " Change key which starts a <C-W> command in a terminal window
@@ -91,9 +92,23 @@ tmapclear
 " C-L is typically mapped to redraw, it could be that netrw has it mapped to something else as well
 " unmap <C-L>
 
+" Adjust movement keys to always center the screen
+nnoremap j jzz
+nnoremap k kzz
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
+nnoremap { {zz
+nnoremap } }zz
+nnoremap <C-]> <C-]>zz
+nnoremap <C-O> <C-O>zz
+nnoremap <C-I> <C-I>zz
+nnoremap n nzz
+nnoremap N Nzz
 " Add special keys for switching tabs (that work the same in normal and terminal mode)
 nnoremap <C-h> :tabprevious<CR>
 nnoremap <C-l> :tabnext<CR>
+inoremap <C-h> <Esc>:tabprevious<CR>
+inoremap <C-l> <Esc>:tabnext<CR>
 tnoremap <C-h> <C-Y>:tabprevious<CR>
 tnoremap <C-l> <C-Y>:tabnext<CR>
 " Go to normal mode with C-t
@@ -142,23 +157,3 @@ map <leader>m :MakeTags<CR>
 map <leader>i :Ipy<CR>
 " autocmd BufWritePost *.py PythonCmds 
 
-
-""" Plugin setup
-
-" let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-" if empty(glob(data_dir . '/autoload/plug.vim'))
-"   silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-"   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-" endif
-" 
-" 
-" " Specify a directory for plugins
-" " - For Neovim: stdpath('data') . '/plugged'
-" " - Avoid using standard Vim directory names like 'plugin'
-" call plug#begin('~/.vim/plugged')
-" 
-" Plug 'prabirshrestha/vim-lsp'
-" Plug 'mattn/vim-lsp-settings'
-" 
-" " Initialize plugin system
-" call plug#end()
