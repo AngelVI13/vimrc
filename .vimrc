@@ -18,27 +18,12 @@ set termwinkey=<C-Y>
 
 " Make vim use full truecolor support
 set termguicolors
-colorscheme peachpuff
-
-" Custom VIM terminal color scheme that works with peachpuff colorscheme
-let g:terminal_ansi_colors=[
-\'#101010', 
-\'#a82c2c',
-\'#257525',
-\'#945019',
-\'#252575',
-\'#750075',
-\'#005555',
-\'#808080',
-\'#606060',
-\'#d82828',
-\'#168c16',
-\'#8c8c16',
-\'#2828b8',
-\'#900090',
-\'#009090',
-\'#EEEEEE'
-\]
+" colorscheme peachpuff
+set background=dark
+" download from https://github.com/morhetz/gruvbox
+colorscheme gruvbox
+let g:gruvbox_contrast_dark="hard"
+let g:gruvbox_transparent_bg=1
 
 " Replace grep with rg
 set grepprg=rg\ -n\ 
@@ -93,8 +78,6 @@ tmapclear
 " unmap <C-L>
 
 " Adjust movement keys to always center the screen
-nnoremap j jzz
-nnoremap k kzz
 nnoremap <C-d> <C-d>zz
 nnoremap <C-u> <C-u>zz
 nnoremap { {zz
@@ -150,9 +133,11 @@ command -nargs=0 Black call system('py -3.7 -m black --line-length=120 ' . expan
 command -nargs=0 Isort call system('py -3.7 -m isort ' . expand('%')) | execute 'e'
 command -nargs=0 Flake8 cgete system('py -3.7 -m flake8 ' . expand('%') . ' --ignore=E501,E266,W503')
 command -nargs=0 Mypy cadde system('py -3.7 -m mypy --no-error-summary --follow-imports=silent ' . expand('%'))
-command -nargs=0 PythonCmds execute 'Black' | execute 'Isort' | execute 'Flake8' | execute 'Mypy'
+command -nargs=0 PythonCmds execute 'Flake8' | execute 'Mypy'
+command -nargs=0 PythonFmt execute 'Black' | execute 'Isort'
 
-map <leader>p :PythonCmds<CR>
+map <leader>pp :PythonCmds<CR>
+map <leader>pf :PythonFmt<CR>
 map <leader>m :MakeTags<CR>
 map <leader>i :Ipy<CR>
 " autocmd BufWritePost *.py PythonCmds 
