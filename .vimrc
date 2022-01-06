@@ -142,3 +142,6 @@ map <leader>m :MakeTags<CR>
 map <leader>i :Ipy<CR>
 " autocmd BufWritePost *.py PythonCmds 
 
+" For robotframework support
+" Add this to the beginning of a file # -*- coding: robot -*-
+" Or type :setf robot
