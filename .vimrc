@@ -123,7 +123,6 @@ let filetype_fs = "forth"
 " Command that silences the enter something to continue
 command! -nargs=+ Silent execute 'silent <args>' | execute 'redraw!'
 " Git Bash command
-" command -nargs=+ GitBashArgs Silent !"git-bash" \-\c <args>  
 command -nargs=0 GitBash call system('git-bash &')
 command -nargs=+ GitBashArgs call system('git-bash -c <args> &')
 command -nargs=0 Ipy GitBashArgs ipython
@@ -135,13 +134,64 @@ command -nargs=0 Flake8 cgete system('py -3.7 -m flake8 ' . expand('%') . ' --ig
 command -nargs=0 Mypy cadde system('py -3.7 -m mypy --no-error-summary --follow-imports=silent ' . expand('%'))
 command -nargs=0 PythonCmds execute 'Flake8' | execute 'Mypy'
 command -nargs=0 PythonFmt execute 'Black' | execute 'Isort'
+command -nargs=1 Cheat call system("curl cheat.sh/<args> > temp.txt") | execute ":term cat temp.txt" 
+
+" NOTE: the following section sets up search integration with rg & fzf. Make sure you have
+"       fzf installed: https://github.com/junegunn/fzf
+" This is the default search command for fzf
+let $FZF_DEFAULT_COMMAND = 'rg --files --hidden'  
+" Runs external command, captures output and returns the first line of the output
+funct! ExecCaptureOutput(cmd)
+    execute "silent !" . a:cmd . "> .output.txt"
+    let output = readfile(".output.txt")
+    if len(output) == 0
+        let output = ""
+    else
+        let output = output[0]
+    endif
+    execute "redraw!"
+    return output
+endfunct!
+
+" Run external command and open in new tab the output string (expecting a filename)
+funct! Exec(cmd)
+    let output = ExecCaptureOutput(a:cmd)
+    if len(output) == 0
+        return ""
+    endif
+    execute 'tabe ' . output
+endfunct!
+
+" Run external `rg` command and open in new tab the output string (expecting a filename + lineno)
+funct! ExecRg(cmd)
+    let output = ExecCaptureOutput(a:cmd)
+    if len(output) == 0
+        return ''
+    endif
+    let output = output[0]
+    let output = split(output, ":")
+    let filename = output[0]
+    let line_number = output[1]
+    execute 'tabe ' . filename
+    execute ':' . line_number
+    return ''
+endfunct!
+
+command -nargs=0 GitFiles call Exec("git ls-files | fzf")
+command -nargs=0 Files call Exec("fzf")
+command -nargs=* SearchFiles call ExecRg('rg -n <args> "" | fzf')
+" Command remaps
+nnoremap <C-f> :Files<Cr>
+nnoremap <C-g> :GitFiles<Cr>
+nnoremap \ :SearchFiles 
 
 map <leader>pp :PythonCmds<CR>
 map <leader>pf :PythonFmt<CR>
+map <leader>ps :SearchFiles -tpy<CR>
 map <leader>m :MakeTags<CR>
 map <leader>i :Ipy<CR>
-" autocmd BufWritePost *.py PythonCmds 
 
+" autocmd BufWritePost *.py PythonCmds 
 " For robotframework support
 " Add this to the beginning of a file # -*- coding: robot -*-
 " Or type :setf robot
