@@ -139,10 +139,12 @@ command -nargs=1 Cheat call system("curl cheat.sh/<args> > temp.txt") | execute 
 " NOTE: the following section sets up search integration with rg & fzf. Make sure you have
 "       fzf installed: https://github.com/junegunn/fzf
 " This is the default search command for fzf
-let $FZF_DEFAULT_COMMAND = 'rg --files --hidden'  
+" let $FZF_DEFAULT_COMMAND = "rg --files --hidden | sed 's/\\/\//g'"  
 " Runs external command, captures output and returns the first line of the output
 funct! ExecCaptureOutput(cmd)
-    execute "silent !" . a:cmd . "> .output.txt"
+    execute "silent !" . a:cmd . " > .output.txt"
+    " The sed replaces inplace backslashes with forward slashes from filepath
+    execute "silent !sed -i ". shellescape('s/\\/\//g') . " .output.txt"
     let output = readfile(".output.txt")
     if len(output) == 0
         let output = ""
@@ -168,7 +170,6 @@ funct! ExecRg(cmd)
     if len(output) == 0
         return ''
     endif
-    let output = output[0]
     let output = split(output, ":")
     let filename = output[0]
     let line_number = output[1]
@@ -177,9 +178,9 @@ funct! ExecRg(cmd)
     return ''
 endfunct!
 
-command -nargs=0 GitFiles call Exec("git ls-files | fzf")
-command -nargs=0 Files call Exec("fzf")
-command -nargs=* SearchFiles call ExecRg('rg -n <args> "" | fzf')
+command -nargs=0 GitFiles call Exec("git ls-files | fzf --preview='head -$LINES {}'")
+command -nargs=0 Files call Exec("rg --files --hidden | fzf --preview='head -$LINES {}'")
+command -nargs=* SearchFiles call ExecRg('rg -n --color always <args> "" | fzf --ansi --preview="$HOME/.vim/search_preview.sh {}"')
 " Command remaps
 nnoremap <C-f> :Files<Cr>
 nnoremap <C-g> :GitFiles<Cr>
@@ -188,10 +189,8 @@ nnoremap \ :SearchFiles
 map <leader>pp :PythonCmds<CR>
 map <leader>pf :PythonFmt<CR>
 map <leader>ps :SearchFiles -tpy<CR>
+map <leader>h :Cheat 
 map <leader>m :MakeTags<CR>
 map <leader>i :Ipy<CR>
 
 " autocmd BufWritePost *.py PythonCmds 
-" For robotframework support
-" Add this to the beginning of a file # -*- coding: robot -*-
-" Or type :setf robot
