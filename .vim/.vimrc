@@ -4,12 +4,14 @@ set nu rnu
 " Disable bell sound
 set belloff=all
 
+let vim_path = "$HOME/vimrc/.vim/"
+let vimrc_path = vim_path . ".vimrc"
 " Change leader key
 let mapleader=","
 map <leader>t :tab term<CR>
 map <leader>d :tabe %:p<CR>
 map <leader>c :let @/=""<CR>
-map <leader>e :tabe $MYVIMRC<CR>
+map <leader>e :execute 'tabe ' . vimrc_path<CR>
 map <leader>o :copen 3<CR>
 inoremap jj <Esc>
 
@@ -138,14 +140,13 @@ command -nargs=1 Cheat call system("curl cheat.sh/<args> > temp.txt") | execute 
 
 " NOTE: the following section sets up search integration with rg & fzf. Make sure you have
 "       fzf installed: https://github.com/junegunn/fzf
-" This is the default search command for fzf
-" let $FZF_DEFAULT_COMMAND = "rg --files --hidden | sed 's/\\/\//g'"  
 " Runs external command, captures output and returns the first line of the output
 funct! ExecCaptureOutput(cmd)
-    execute "silent !" . a:cmd . " > .output.txt"
+    let l:filename = ".output.txt"
+    execute "silent !" . a:cmd . " > " . l:filename
     " The sed replaces inplace backslashes with forward slashes from filepath
-    execute "silent !sed -i ". shellescape('s/\\/\//g') . " .output.txt"
-    let output = readfile(".output.txt")
+    execute "silent !sed -i ". shellescape('s/\\/\//g') . " " . l:filename
+    let output = readfile(l:filename)
     if len(output) == 0
         let output = ""
     else
@@ -180,7 +181,7 @@ endfunct!
 
 command -nargs=0 GitFiles call Exec("git ls-files | fzf --preview='head -$LINES {}'")
 command -nargs=0 Files call Exec("rg --files --hidden | fzf --preview='head -$LINES {}'")
-command -nargs=* SearchFiles call ExecRg('rg -n --color always <args> "" | fzf --ansi --preview="$HOME/.vim/search_preview.sh {}"')
+command -nargs=* SearchFiles call ExecRg('rg -n --color always <args> "" | fzf --ansi --preview="' . vim_path . 'search_preview.sh {}"')
 " Command remaps
 nnoremap <C-f> :Files<Cr>
 nnoremap <C-g> :GitFiles<Cr>
