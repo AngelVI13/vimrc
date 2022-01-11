@@ -1,0 +1,3 @@
+let vim_path = '$HOME/vimrc/.vim,' 
+let &runtimepath = vim_path . &runtimepath
+source $HOME/vimrc/.vim/.vimrc
