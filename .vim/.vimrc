@@ -146,45 +146,76 @@ funct! ExecCaptureOutput(cmd)
     execute "silent !" . a:cmd . " > " . l:filename
     " The sed replaces inplace backslashes with forward slashes from filepath
     execute "silent !sed -i ". shellescape('s/\\/\//g') . " " . l:filename
-    let output = readfile(l:filename)
-    if len(output) == 0
-        let output = ""
+    let l:output = readfile(l:filename)
+    if len(l:output) == 0
+        let l:output = ""
     else
-        let output = output[0]
+        let l:output = l:output[0]
     endif
     execute "redraw!"
-    return output
+    return l:output
 endfunct!
 
 " Run external command and open in new tab the output string (expecting a filename)
 funct! Exec(cmd)
-    let output = ExecCaptureOutput(a:cmd)
-    if len(output) == 0
+    let l:output = ExecCaptureOutput(a:cmd)
+    if len(l:output) == 0
         return ""
     endif
-    execute 'tabe ' . output
+    execute 'tabe ' . l:output
 endfunct!
 
 " Run external `rg` command and open in new tab the output string (expecting a filename + lineno)
 funct! ExecRg(cmd)
-    let output = ExecCaptureOutput(a:cmd)
-    if len(output) == 0
+    let l:output = ExecCaptureOutput(a:cmd)
+    if len(l:output) == 0
         return ''
     endif
-    let output = split(output, ":")
-    let filename = output[0]
-    let line_number = output[1]
-    execute 'tabe ' . filename
-    execute ':' . line_number
+    let l:output = split(l:output, ":")
+    let l:filename = l:output[0]
+    let l:line_number = l:output[1]
+    execute 'tabe ' . l:filename
+    execute ':' . l:line_number
+    return ''
+endfunct!
+
+function! GetActiveBuffers()
+    let l:blist = getbufinfo({'bufloaded': 1, 'buflisted': 1})
+    let l:result = []
+    for l:item in l:blist
+        "skip unnamed buffers; also skip hidden buffers?
+        if empty(l:item.name) || l:item.hidden
+            continue
+        endif
+        " call add(l:result, shellescape(l:item.name))
+        call add(l:result, l:item.name)
+    endfor
+    return l:result
+endfunction
+
+" Run external `fzf` command on list of active buffers and open in the current tab the selected buffer
+funct! ExecBuffers()
+    let l:buff_list = GetActiveBuffers()
+    let l:buff_file = "buff_list.txt"
+    call writefile(l:buff_list, l:buff_file)
+    " We are using RG because normal piping doesn't seem to work with fzf and git bash
+    let l:cmd = 'rg -e "" ' . l:buff_file . ' | fzf --preview="cat {}"'
+    let l:output = ExecCaptureOutput(l:cmd)
+    if len(l:output) == 0
+        return ''
+    endif
+    execute 'b ' . l:output
     return ''
 endfunct!
 
 command -nargs=0 GitFiles call Exec("git ls-files | fzf --preview='head -$LINES {}'")
 command -nargs=0 Files call Exec("rg --files --hidden | fzf --preview='head -$LINES {}'")
 command -nargs=* SearchFiles call ExecRg('rg -n --color always <args> "" | fzf --ansi --preview="' . vim_path . 'search_preview.sh {}"')
+command -nargs=0 Buffers call ExecBuffers()
 " Command remaps
 nnoremap <C-f> :Files<Cr>
 nnoremap <C-g> :GitFiles<Cr>
+nnoremap <C-b> :Buffers<Cr>
 nnoremap \ :SearchFiles 
 
 map <leader>pp :PythonCmds<CR>
