@@ -216,7 +216,7 @@ command -nargs=0 Buffers call ExecBuffers()
 nnoremap <C-f> :Files<Cr>
 nnoremap <C-g> :GitFiles<Cr>
 nnoremap <C-b> :Buffers<Cr>
-nnoremap \ :SearchFiles 
+nnoremap <C-s> :SearchFiles 
 
 map <leader>pp :PythonCmds<CR>
 map <leader>pf :PythonFmt<CR>
