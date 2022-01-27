@@ -6,6 +6,7 @@ set belloff=all
 
 let vim_path = "$HOME/vimrc/.vim/"
 let vimrc_path = vim_path . ".vimrc"
+let spell_path = vim_path . "spell/en.utf-8.add"
 " Change leader key
 let mapleader=","
 map <leader>t :tab term<CR>
@@ -26,6 +27,8 @@ set background=dark
 colorscheme gruvbox
 let g:gruvbox_contrast_dark="hard"
 let g:gruvbox_transparent_bg=1
+" Add ruler at 120 chars
+set colorcolumn=120
 
 " Replace grep with rg
 set grepprg=rg\ -n\ 
@@ -64,6 +67,11 @@ set incsearch
 " Enable search highlighting
 set hlsearch
 
+" Enable spellcheck
+set spell
+set spelllang=en
+set spellfile=
+
 " Set directory where vim will keep tmp files
 set directory^=$HOME/.vim/tmp//
 
@@ -73,37 +81,6 @@ set splitright
 
 " Enable delete with backspace when in insert mode
 set backspace=indent,eol,start
-
-" Remove all default terminal mappings (so that the default bash keybindings can be used)
-tmapclear
-" C-L is typically mapped to redraw, it could be that netrw has it mapped to something else as well
-" unmap <C-L>
-
-" Adjust movement keys to always center the screen
-nnoremap <C-d> <C-d>zz
-nnoremap <C-u> <C-u>zz
-nnoremap { {zz
-nnoremap } }zz
-nnoremap <C-]> <C-]>zz
-nnoremap <C-O> <C-O>zz
-nnoremap <C-I> <C-I>zz
-nnoremap n nzz
-nnoremap N Nzz
-" Add special keys for switching tabs (that work the same in normal and terminal mode)
-nnoremap <C-h> :tabprevious<CR>
-nnoremap <C-l> :tabnext<CR>
-inoremap <C-h> <Esc>:tabprevious<CR>
-inoremap <C-l> <Esc>:tabnext<CR>
-tnoremap <C-h> <C-Y>:tabprevious<CR>
-tnoremap <C-l> <C-Y>:tabnext<CR>
-" Go to normal mode with C-t
-tnoremap <C-t> <C-Y>N
-" Quit terminal with C-q
-tnoremap <C-/> <C-Y>:q!<CR>
-" Paste with C-v in terminal
-tnoremap <C-v> <C-Y>"+
-" Enter command mode
-tnoremap <C-[> <C-Y>:
 
 " Make netrw default display to `tree`
 let g:netrw_liststyle=1
@@ -162,7 +139,7 @@ funct! Exec(cmd)
     if len(l:output) == 0
         return ""
     endif
-    execute 'tabe ' . l:output
+    execute 'e ' . l:output
 endfunct!
 
 " Run external `rg` command and open in new tab the output string (expecting a filename + lineno)
@@ -174,7 +151,7 @@ funct! ExecRg(cmd)
     let l:output = split(l:output, ":")
     let l:filename = l:output[0]
     let l:line_number = l:output[1]
-    execute 'tabe ' . l:filename
+    execute 'e ' . l:filename
     execute ':' . l:line_number
     return ''
 endfunct!
@@ -208,21 +185,70 @@ funct! ExecBuffers()
     return ''
 endfunct!
 
-command -nargs=0 GitFiles call Exec("git ls-files | fzf --preview='head -$LINES {}'")
-command -nargs=0 Files call Exec("rg --files --hidden | fzf --preview='head -$LINES {}'")
-command -nargs=* SearchFiles call ExecRg('rg -n --color always <args> "" | fzf --ansi --preview="' . vim_path . 'search_preview.sh {}"')
+command -nargs=0 GitFiles call Exec("git ls-files | fzf -e --preview='head -$LINES {}'")
+command -nargs=0 Files call Exec("rg --files --hidden | fzf -e --preview='head -$LINES {}'")
+command -nargs=* SearchFiles call ExecRg('rg -n --color always <args> "" | fzf -e --ansi --preview="' . vim_path . 'search_preview.sh {}"')
 command -nargs=0 Buffers call ExecBuffers()
+
+" ---------- REMAPS ------------
 " Command remaps
 nnoremap <C-f> :Files<Cr>
 nnoremap <C-g> :GitFiles<Cr>
-nnoremap <C-b> :Buffers<Cr>
+nnoremap <C-b> :ls<CR>:b<Space>
+" Jump to mark
+nnoremap <C-m> :<C-u>marks<CR>:normal! `
 nnoremap <C-s> :SearchFiles 
 
-map <leader>pp :PythonCmds<CR>
+" Remove all default terminal mappings (so that the default bash keybindings can be used)
+tmapclear
+" C-L is typically mapped to redraw, it could be that netrw has it mapped to something else as well
+" unmap <C-L>
+
+" Adjust movement keys to always center the screen
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
+nnoremap { {zz
+nnoremap } }zz
+nnoremap <C-]> <C-]>zz
+nnoremap <C-O> <C-O>zz
+nnoremap <C-I> <C-I>zz
+nnoremap n nzz
+nnoremap N Nzz
+" Add special keys for switching tabs (that work the same in normal and terminal mode)
+nnoremap <C-h> :tabprevious<CR>
+nnoremap <C-l> :tabnext<CR>
+inoremap <C-h> <Esc>:tabprevious<CR>
+inoremap <C-l> <Esc>:tabnext<CR>
+tnoremap <C-h> <C-Y>:tabprevious<CR>
+tnoremap <C-l> <C-Y>:tabnext<CR>
+" Go to normal mode with C-t
+tnoremap <C-t> <C-Y>N
+" Quit terminal with C-q
+tnoremap <C-/> <C-Y>:q!<CR>
+" Paste with C-v in terminal
+tnoremap <C-v> <C-Y>"+
+" Enter command mode
+tnoremap <C-[> <C-Y>:
+" Quickfix jumping
+nnoremap ]] :cn<CR>zz
+nnoremap [[ :cp<CR>zz
+nnoremap ]s ]s
+nnoremap [s [s
+
+map <leader>pp :PythonCmds<CR>:copen 3<CR>
 map <leader>pf :PythonFmt<CR>
 map <leader>ps :SearchFiles -tpy<CR>
 map <leader>h :Cheat 
-map <leader>m :MakeTags<CR>
+map <leader>mt :MakeTags<CR>
 map <leader>i :Ipy<CR>
+" Delete marks
+map <leader>md :delm! \| delm A-Z0-9<CR>
+" Make mark
+map <leader>mm :<C-u>marks<CR>:mark<Space>
+" Delete buffers
+map <leader>b :ls<CR>:bd<Space>
 
 " autocmd BufWritePost *.py PythonCmds 
+" Opens all folds when file is opened
+set foldlevelstart=99
+au BufReadPre *.py setlocal foldmethod=indent

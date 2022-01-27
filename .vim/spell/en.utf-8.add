@@ -1,0 +1,10 @@
+Quickfix
+Getter
+repr
+str
+bool
+iterable
+assertEqual
+iterables
+assertAlmostEqual
+singledispatch
