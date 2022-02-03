@@ -28,7 +28,7 @@ colorscheme gruvbox
 let g:gruvbox_contrast_dark="hard"
 let g:gruvbox_transparent_bg=1
 " Add ruler at 120 chars
-set colorcolumn=120
+set colorcolumn=90,120
 
 " Replace grep with rg
 set grepprg=rg\ -n\ 
@@ -67,10 +67,9 @@ set incsearch
 " Enable search highlighting
 set hlsearch
 
-" Enable spellcheck
-set spell
+" Spellcheck settings
 set spelllang=en
-set spellfile=
+set spellfile="$HOME/vimrc/.vim/spell/en.utf-8.add"
 
 " Set directory where vim will keep tmp files
 set directory^=$HOME/.vim/tmp//
@@ -107,12 +106,12 @@ command -nargs=+ GitBashArgs call system('git-bash -c <args> &')
 command -nargs=0 Ipy GitBashArgs ipython
 command -nargs=0 MakeTags GitBashArgs ./make_tags.sh
 " Special commands
-command -nargs=0 Black call system('py -3.7 -m black --line-length=120 ' . expand('%')) | execute 'e'
+command -nargs=1 Black call system('py -3.7 -m black --line-length=<args> ' . expand('%')) | execute 'e'
 command -nargs=0 Isort call system('py -3.7 -m isort ' . expand('%')) | execute 'e'
 command -nargs=0 Flake8 cgete system('py -3.7 -m flake8 ' . expand('%') . ' --ignore=E501,E266,W503')
 command -nargs=0 Mypy cadde system('py -3.7 -m mypy --no-error-summary --follow-imports=silent ' . expand('%'))
 command -nargs=0 PythonCmds execute 'Flake8' | execute 'Mypy'
-command -nargs=0 PythonFmt execute 'Black' | execute 'Isort'
+command -nargs=1 PythonFmt execute 'Black <args>' | execute 'Isort'
 command -nargs=1 Cheat call system("curl cheat.sh/<args> > temp.txt") | execute ":term cat temp.txt" 
 
 " NOTE: the following section sets up search integration with rg & fzf. Make sure you have
@@ -236,7 +235,8 @@ nnoremap ]s ]s
 nnoremap [s [s
 
 map <leader>pp :PythonCmds<CR>:copen 3<CR>
-map <leader>pf :PythonFmt<CR>
+map <leader>pf :PythonFmt 120<CR>
+map <leader>pF :PythonFmt 90<CR>
 map <leader>ps :SearchFiles -tpy<CR>
 map <leader>h :Cheat 
 map <leader>mt :MakeTags<CR>
@@ -251,4 +251,4 @@ map <leader>b :ls<CR>:bd<Space>
 " autocmd BufWritePost *.py PythonCmds 
 " Opens all folds when file is opened
 set foldlevelstart=99
-au BufReadPre *.py setlocal foldmethod=indent
+au BufReadPre *.py setlocal foldmethod=indent | setlocal spell
