@@ -7,6 +7,7 @@ set belloff=all
 let vim_path = "$HOME/vimrc/.vim/"
 let vimrc_path = vim_path . ".vimrc"
 let spell_path = vim_path . "spell/en.utf-8.add"
+let python_alias = "python3"
 " Change leader key
 let mapleader=","
 map <leader>t :tab term<CR>
@@ -106,10 +107,10 @@ command -nargs=+ GitBashArgs call system('git-bash -c <args> &')
 command -nargs=0 Ipy GitBashArgs ipython
 command -nargs=0 MakeTags GitBashArgs ./make_tags.sh
 " Special commands
-command -nargs=1 Black call system('py -3.7 -m black --line-length=<args> ' . expand('%')) | execute 'e'
-command -nargs=0 Isort call system('py -3.7 -m isort ' . expand('%')) | execute 'e'
-command -nargs=0 Flake8 cgete system('py -3.7 -m flake8 ' . expand('%') . ' --ignore=E501,E266,W503')
-command -nargs=0 Mypy cadde system('py -3.7 -m mypy --no-error-summary --follow-imports=silent ' . expand('%'))
+command -nargs=1 Black call system(python_alias .' -m black --line-length=<args> ' . expand('%')) | execute 'e'
+command -nargs=0 Isort call system(python_alias .' -m isort ' . expand('%')) | execute 'e'
+command -nargs=0 Flake8 cgete system(python_alias .' -m flake8 ' . expand('%') . ' --ignore=E501,E266,W503')
+command -nargs=0 Mypy cadde system(python_alias .' -m mypy --no-error-summary --follow-imports=silent ' . expand('%'))
 command -nargs=0 PythonCmds execute 'Flake8' | execute 'Mypy'
 command -nargs=1 PythonFmt execute 'Black <args>' | execute 'Isort'
 command -nargs=1 Cheat call system("curl cheat.sh/<args> > temp.txt") | execute ":term cat temp.txt" 
