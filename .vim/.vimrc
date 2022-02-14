@@ -101,11 +101,9 @@ let filetype_fs = "forth"
 
 " Command that silences the enter something to continue
 command! -nargs=+ Silent execute 'silent <args>' | execute 'redraw!'
-" Git Bash command
-command -nargs=0 GitBash call system('git-bash &')
-command -nargs=+ GitBashArgs call system('git-bash -c <args> &')
-command -nargs=0 Ipy GitBashArgs ipython
+" Tags command
 command -nargs=0 MakeTags GitBashArgs ./make_tags.sh
+command -nargs=0 MakeGenericTags Silent !ctags -R
 " Special commands
 command -nargs=1 Black call system(python_alias .' -m black --line-length=<args> ' . expand('%')) | execute 'e'
 command -nargs=0 Isort call system(python_alias .' -m isort ' . expand('%')) | execute 'e'
@@ -185,9 +183,10 @@ funct! ExecBuffers()
     return ''
 endfunct!
 
-command -nargs=0 GitFiles call Exec("git ls-files | fzf -e --preview='head -$LINES {}'")
-command -nargs=0 Files call Exec("rg --files --hidden | fzf -e --preview='head -$LINES {}'")
-command -nargs=* SearchFiles call ExecRg('rg -n --color always <args> "" | fzf -e --ansi --preview="' . vim_path . 'search_preview.sh {}"')
+command -nargs=0 GitFiles call Exec("git ls-files | fzf --preview 'bat --style=numbers --color=always --line-range :200 {}'")
+command -nargs=0 Files call Exec("rg --files --hidden | fzf --preview 'bat --style=numbers --color=always --line-range :200 {}'")
+# TODO: need to fix the preview window
+command -nargs=* SearchFiles call ExecRg('rg --column --line-number --hidden --ignore-case --no-heading --color=always <args> "" | fzf -e --ansi')
 command -nargs=0 Buffers call ExecBuffers()
 
 " ---------- REMAPS ------------
@@ -241,7 +240,7 @@ map <leader>pF :PythonFmt 90<CR>
 map <leader>ps :SearchFiles -tpy<CR>
 map <leader>h :Cheat 
 map <leader>mt :MakeTags<CR>
-map <leader>i :Ipy<CR>
+map <leader>mT :MakeGenericTags<CR>
 " Delete marks
 map <leader>md :delm! \| delm A-Z0-9<CR>
 " Make mark
