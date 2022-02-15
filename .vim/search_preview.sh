@@ -1,7 +1,8 @@
 # (IFS=:;set -- $1;head -$LINES $1)
 # Split input search result by `:` i.e. input = "run_tests.py:12: search result line"
-# Display 10 lines above the match and 10 lines below the match
-s_range=10
+# Display 13 lines above the match and 10 lines below the match. Currently showing everything after the match
+s_range=13  # number of lines above the result which should be shown
 d_range=$((s_range*2))
-(IFS=:;set -- $1;end_line=$(($s_range+$2));head -$end_line $1 | tail -$d_range)
+# Here $1 and $2 are the `:` separater inputs i.e. filename and line number
+(IFS=:;set -- $1;start_line=$(($2-$s_range));bat --style=numbers --color=always --highlight-line $2 --line-range $start_line: $1)
 
