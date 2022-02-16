@@ -8,14 +8,9 @@ let vim_path = "$HOME/vimrc/.vim/"
 let vimrc_path = vim_path . ".vimrc"
 let spell_path = vim_path . "spell/en.utf-8.add"
 let python_alias = "python3"
-" Change leader key
-let mapleader=","
-map <leader>t :tab term<CR>
-map <leader>d :tabe %:p<CR>
-map <leader>c :let @/=""<CR>
-map <leader>e :execute 'tabe ' . vimrc_path<CR>
-map <leader>o :copen 3<CR>
-inoremap jj <Esc>
+
+" Make statusline always active
+set laststatus=2
 
 " Change key which starts a <C-W> command in a terminal window
 set termwinkey=<C-Y>
@@ -233,21 +228,32 @@ nnoremap [[ :cp<CR>zz
 nnoremap ]s ]s
 nnoremap [s [s
 
+" Change leader key
+let mapleader=","
+" General mappings
+map <leader>t :tab term<CR>
+map <leader>d :tabe %:p<CR>
+map <leader>c :let @/=""<CR>
+map <leader>e :execute 'tabe ' . vimrc_path<CR>
+map <leader>o :copen 3<CR>
+" Python mappings
 map <leader>pp :PythonCmds<CR>:copen 3<CR>
 map <leader>pf :PythonFmt 120<CR>
 map <leader>pF :PythonFmt 90<CR>
+" Search mappings
 map <leader>sp :SearchFiles -tpy<CR>
 map <leader>sg :SearchFiles -tgo<CR>
 map <leader>sc :SearchFiles -tcpp -th -tc -thpp<CR>
 map <leader>sj :SearchFiles -tjson<CR>
+" Tools mappings
 map <leader>h :Cheat 
 map <leader>mt :MakeTags<CR>
 map <leader>mT :MakeGenericTags<CR>
-" Delete marks
+"" Delete marks
 map <leader>md :delm! \| delm A-Z0-9<CR>
-" Make mark
+"" Make mark
 map <leader>mm :<C-u>marks<CR>:mark<Space>
-" Delete buffers
+"" Delete buffers
 map <leader>b :ls<CR>:bd<Space>
 
 " autocmd BufWritePost *.py PythonCmds 
