@@ -236,7 +236,10 @@ nnoremap [s [s
 map <leader>pp :PythonCmds<CR>:copen 3<CR>
 map <leader>pf :PythonFmt 120<CR>
 map <leader>pF :PythonFmt 90<CR>
-map <leader>ps :SearchFiles -tpy<CR>
+map <leader>sp :SearchFiles -tpy<CR>
+map <leader>sg :SearchFiles -tgo<CR>
+map <leader>sc :SearchFiles -tcpp -th -tc -thpp<CR>
+map <leader>sj :SearchFiles -tjson<CR>
 map <leader>h :Cheat 
 map <leader>mt :MakeTags<CR>
 map <leader>mT :MakeGenericTags<CR>
