@@ -243,7 +243,7 @@ map <leader>pF :PythonFmt 90<CR>
 " Search mappings
 map <leader>sp :SearchFiles -tpy<CR>
 map <leader>sg :SearchFiles -tgo<CR>
-map <leader>sc :SearchFiles -tcpp -th -tc -thpp -tproto<CR>
+map <leader>sc :SearchFiles -tcpp -tprotobuf<CR>
 map <leader>sj :SearchFiles -tjson<CR>
 " Tools mappings
 map <leader>h :Cheat 
