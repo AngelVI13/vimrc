@@ -4,5 +4,5 @@
 s_range=13  # number of lines above the result which should be shown
 d_range=$((s_range*2))
 # Here $1 and $2 are the `:` separater inputs i.e. filename and line number
-(IFS=:;set -- $1;start_line=$(($2-$s_range));bat --style=numbers --color=always --highlight-line $2 --line-range $start_line: $1)
+(IFS=:;set -- $1;start_line=$(($2-$s_range));bat --style=numbers --color=always --highlight-line $2 --line-range $(($start_line>0? $start_line: 0)): $1)
 

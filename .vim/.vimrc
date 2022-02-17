@@ -180,7 +180,7 @@ endfunct!
 
 command -nargs=0 GitFiles call Exec("git ls-files | fzf --preview 'bat --style=numbers --color=always --line-range :200 {}'")
 command -nargs=0 Files call Exec("rg --files --hidden | fzf --preview 'bat --style=numbers --color=always --line-range :200 {}'")
-command -nargs=* SearchFiles call ExecRg('rg -n --color always <args> "" | fzf -e --ansi --preview="' . vim_path . 'search_preview.sh {}"')
+command -nargs=* SearchFiles call ExecRg('rg -n --color always --ignore-files <args> "" | fzf -e --ansi --preview="' . vim_path . 'search_preview.sh {}"')
 command -nargs=0 Buffers call ExecBuffers()
 
 " ---------- REMAPS ------------
