@@ -216,12 +216,8 @@ tnoremap <C-h> <C-Y>:tabprevious<CR>
 tnoremap <C-l> <C-Y>:tabnext<CR>
 " Go to normal mode with C-t
 tnoremap <C-t> <C-Y>N
-" Quit terminal with C-q
-tnoremap <C-/> <C-Y>:q!<CR>
 " Paste with C-v in terminal
 tnoremap <C-v> <C-Y>"+
-" Enter command mode
-tnoremap <C-[> <C-Y>:
 " Quickfix jumping
 nnoremap ]] :cn<CR>zz
 nnoremap [[ :cp<CR>zz
