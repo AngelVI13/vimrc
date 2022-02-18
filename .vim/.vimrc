@@ -30,7 +30,7 @@ set colorcolumn=90,120
 set grepprg=rg\ -n\ 
 
 " Makes gvim work nice with Windows system clipboard
-set clipboard=unnamed
+set clipboard=unnamedplus
 
 " Indent with spaces instead of tabs (filetype specific indents)
 filetype plugin indent on
