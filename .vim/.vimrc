@@ -189,7 +189,7 @@ nnoremap <C-f> :Files<Cr>
 nnoremap <C-g> :GitFiles<Cr>
 nnoremap <C-b> :ls<CR>:b<Space>
 " Jump to mark
-nnoremap <C-m> :<C-u>marks<CR>:normal! `
+nnoremap <C-`> :<C-u>marks<CR>:normal! `
 nnoremap <C-s> :SearchFiles 
 
 " Remove all default terminal mappings (so that the default bash keybindings can be used)
