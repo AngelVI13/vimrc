@@ -223,6 +223,8 @@ nnoremap ]] :cn<CR>zz
 nnoremap [[ :cp<CR>zz
 nnoremap ]s ]s
 nnoremap [s [s
+" Set C-a as alternative to C-6
+nnoremap <C-a> <C-^>
 
 " Change leader key
 let mapleader=","
