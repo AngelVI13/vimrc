@@ -12,11 +12,8 @@ let python_alias = "python3"
 " Make statusline always active
 set laststatus=2
 
-" Change key which starts a <C-W> command in a terminal window
-set termwinkey=<C-Y>
-
 " Make vim use full truecolor support
-set termguicolors
+" set termguicolors
 " colorscheme peachpuff
 set background=dark
 " download from https://github.com/morhetz/gruvbox
@@ -54,8 +51,8 @@ syntax enable
 " Disable word-wrapping by default
 set nowrap
 " Set smart case insensitive search
-set ignorecase
-set smartcase
+" set ignorecase
+" set smartcase
 
 " Enable incremental search
 set incsearch
@@ -64,8 +61,8 @@ set incsearch
 set hlsearch
 
 " Spellcheck settings
-set spelllang=en
-set spellfile="$HOME/vimrc/.vim/spell/en.utf-8.add"
+" set spelllang=en
+" set spellfile="$HOME/vimrc/.vim/spell/en.utf-8.add"
 
 " Set directory where vim will keep tmp files
 set directory^=$HOME/.vim/tmp//
@@ -184,40 +181,15 @@ command -nargs=* SearchFiles call ExecRg('rg -n --color always --ignore-files <a
 command -nargs=0 Buffers call ExecBuffers()
 
 " ---------- REMAPS ------------
-" Command remaps
-nnoremap <C-f> :Files<Cr>
-nnoremap <C-g> :GitFiles<Cr>
-nnoremap <C-b> :ls<CR>:b<Space>
-" Jump to mark
-nnoremap <C-`> :<C-u>marks<CR>:normal! `
-nnoremap <C-s> :SearchFiles 
-
 " Remove all default terminal mappings (so that the default bash keybindings can be used)
 tmapclear
 " C-L is typically mapped to redraw, it could be that netrw has it mapped to something else as well
 " unmap <C-L>
 
 " Adjust movement keys to always center the screen
-nnoremap <C-d> <C-d>zz
-nnoremap <C-u> <C-u>zz
-nnoremap { {zz
-nnoremap } }zz
 nnoremap <C-]> <C-]>zz
 nnoremap <C-O> <C-O>zz
 nnoremap <C-I> <C-I>zz
-nnoremap n nzz
-nnoremap N Nzz
-" Add special keys for switching tabs (that work the same in normal and terminal mode)
-nnoremap <C-h> :tabprevious<CR>
-nnoremap <C-l> :tabnext<CR>
-inoremap <C-h> <Esc>:tabprevious<CR>
-inoremap <C-l> <Esc>:tabnext<CR>
-tnoremap <C-h> <C-Y>:tabprevious<CR>
-tnoremap <C-l> <C-Y>:tabnext<CR>
-" Go to normal mode with C-t
-tnoremap <C-t> <C-Y>N
-" Paste with C-v in terminal
-tnoremap <C-v> <C-Y>"+
 " Quickfix jumping
 nnoremap ]] :cn<CR>zz
 nnoremap [[ :cp<CR>zz
@@ -225,36 +197,56 @@ nnoremap ]s ]s
 nnoremap [s [s
 " Set SPACE as alternative to C-6
 nnoremap <SPACE> <C-^>
+inoremap jj <C-[>:w<CR>
 
 " Change leader key
 let mapleader=","
 " General mappings
 map <leader>t :tab term<CR>
-map <leader>d :tabe %:p<CR>
 map <leader>c :let @/=""<CR>
-map <leader>e :execute 'tabe ' . vimrc_path<CR>
+map <leader>e :execute 'e ' . vimrc_path<CR>
 map <leader>o :copen 3<CR>
+" Command remaps
+map <leader>f :Files<Cr>
+map <leader>g :GitFiles<Cr>
+map <leader>b :ls<CR>:b<Space>
+" Jump to mark
+map <leader>m :<C-u>marks<CR>:normal! `
+map <leader>s :SearchFiles 
 " Python mappings
 map <leader>pp :PythonCmds<CR>:copen 3<CR>
 map <leader>pf :PythonFmt 120<CR>
 map <leader>pF :PythonFmt 90<CR>
 " Search mappings
-map <leader>sp :SearchFiles -tpy<CR>
-map <leader>sg :SearchFiles -tgo<CR>
-map <leader>sc :SearchFiles -tcpp -tprotobuf<CR>
-map <leader>sj :SearchFiles -tjson<CR>
+map <leader>Sp :SearchFiles -tpy<CR>
+map <leader>Sg :SearchFiles -tgo<CR>
+map <leader>Sc :SearchFiles -tcpp -tprotobuf<CR>
+map <leader>Sj :SearchFiles -tjson<CR>
 " Tools mappings
 map <leader>h :Cheat 
-map <leader>mt :MakeTags<CR>
-map <leader>mT :MakeGenericTags<CR>
+map <leader>Mt :MakeTags<CR>
+map <leader>MT :MakeGenericTags<CR>
 "" Delete marks
-map <leader>md :delm! \| delm A-Z0-9<CR>
-"" Make mark
-map <leader>mm :<C-u>marks<CR>:mark<Space>
+map <leader>dm :delm! \| delm A-Z0-9<CR>
 "" Delete buffers
-map <leader>b :ls<CR>:bd<Space>
+map <leader>db :ls<CR>:bd<Space>
 
 " autocmd BufWritePost *.py PythonCmds 
 " Opens all folds when file is opened
 set foldlevelstart=99
-au BufReadPre *.py setlocal foldmethod=indent | setlocal spell
+au BufReadPre *.py setlocal foldmethod=indent 
+
+" Setup plugin manager
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin()
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
+" Autocomplete
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+call plug#end()
