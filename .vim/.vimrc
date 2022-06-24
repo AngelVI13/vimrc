@@ -12,6 +12,9 @@ let python_alias = "python3"
 " Make statusline always active
 set laststatus=2
 
+" Reduce updatetime
+set updatetime=250
+
 " This is only necessary if you use "set termguicolors".
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
@@ -20,13 +23,7 @@ set background=dark
 set t_Co=256
 
 " Make vim use full truecolor support
-" set termguicolors
-" colorscheme peachpuff
-" set background=dark
-" download from https://github.com/morhetz/gruvbox
-colorscheme gruvbox
-let g:gruvbox_contrast_dark="hard"
-let g:gruvbox_transparent_bg=1
+set termguicolors
 " Add ruler at 120 chars
 set colorcolumn=90,120
 
@@ -106,6 +103,7 @@ command -nargs=0 Mypy cadde system(python_alias .' -m mypy --no-error-summary --
 command -nargs=0 PythonCmds execute 'Flake8' | execute 'Mypy'
 command -nargs=1 PythonFmt execute 'Black <args>' | execute 'Isort'
 command -nargs=1 Cheat call system("curl cheat.sh/<args> > temp.txt") | execute ":term cat temp.txt" 
+command -nargs=0 Gofmt call system("gofmt -w " . expand('%')) | execute 'e'
 
 " ---------- REMAPS ------------
 " Remove all default terminal mappings (so that the default bash keybindings can be used)
@@ -118,13 +116,13 @@ nnoremap <C-]> <C-]>zz
 nnoremap <C-O> <C-O>zz
 nnoremap <C-I> <C-I>zz
 " Quickfix jumping
-nnoremap ]] :cn<CR>zz
-nnoremap [[ :cp<CR>zz
+nnoremap <leader>] :cn<CR>zz
+nnoremap <leader>[ :cp<CR>zz
 nnoremap ]s ]s
 nnoremap [s [s
 " Set SPACE as alternative to C-6
 nnoremap <SPACE> <C-^>
-inoremap jj <C-[>:w<CR>
+inoremap jj <C-[>
 
 " Change leader key
 let mapleader=","
@@ -133,12 +131,7 @@ map <leader>t :tab term<CR>
 map <leader>c :let @/=""<CR>
 map <leader>e :execute 'e ' . vimrc_path<CR>
 map <leader>o :copen 3<CR>
-" Command remaps
-map <leader>f :Files<Cr>
-map <leader>g :GitFiles<Cr>
-map <leader>b :ls<CR>:b<Space>
-" Jump to mark
-map <leader>m :<C-u>marks<CR>:normal! `
+map <leader>D :Ex<CR>
 " Python mappings
 map <leader>pp :PythonCmds<CR>:copen 3<CR>
 map <leader>pf :PythonFmt 120<CR>
@@ -165,9 +158,15 @@ if empty(glob(data_dir . '/autoload/plug.vim'))
 endif
 
 call plug#begin()
+" LSP
 Plug 'natebosch/vim-lsc'
+" FZF
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
+" Git
+Plug 'tpope/vim-fugitive'
+" Colorschemes
+Plug 'ghifarit53/tokyonight-vim'
 call plug#end()
 
 """ LSP config
@@ -184,8 +183,10 @@ let g:lsc_server_commands['python'] = {
         \'log_level': -1,
         \'suppress_stderr': v:true,
         \}
-
-autocmd filetype go autocmd bufwritepre <buffer> call system("gofmt -w " . expand('%')) 
+" Disable preview window
+set completeopt-=preview
+" Autoformat go files on save
+autocmd BufWritePost *.go Gofmt 
 """ FZF config
 " Command remaps
 map <leader>f :Files<Cr>
@@ -194,3 +195,16 @@ map <leader>b :Buffers<Cr>
 " Jump to mark
 map <leader>m :Marks<Cr>
 map <leader>s :Rg<Cr>
+map <leader>G :Git<Cr>
+
+""" Colorschemes
+" colorscheme peachpuff
+" set background=dark
+" download from https://github.com/morhetz/gruvbox
+" colorscheme gruvbox
+" let g:gruvbox_contrast_dark="hard"
+" let g:gruvbox_transparent_bg=1
+let g:tokyonight_style = 'night' " available: night, storm
+let g:tokyonight_disable_italic_comment = 1
+let g:tokyonight_menu_selection_background = "blue"
+colorscheme tokyonight
