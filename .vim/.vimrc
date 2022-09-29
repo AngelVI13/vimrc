@@ -122,7 +122,7 @@ nnoremap ]s ]s
 nnoremap [s [s
 " Set SPACE as alternative to C-6
 nnoremap <SPACE> <C-^>
-inoremap jj <C-[>
+inoremap jk <C-[>
 
 " Change leader key
 let mapleader=","
